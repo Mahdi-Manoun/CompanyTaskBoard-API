@@ -30,7 +30,9 @@ npm install
 # Create a .env file and add necessary environment variables (see below)
 
 # Start the server
-npm start
+npm start   # (Using node)
+ # OR
+npm run dev   # (Using nodemon "preferred")
 ```
 
 ## **Environment Variables**
