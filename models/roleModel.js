@@ -1,20 +1,18 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
+
+// create a role schema
 const roleSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
         unique: true,
         default: 'user'
-    },
-    // permissions: [{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Permission'
-    // }]
+    }
 });
 
 
-
+// create a role model for schema
 const Role = new mongoose.model('Role', roleSchema);
 
-export default Role
+export default Role;

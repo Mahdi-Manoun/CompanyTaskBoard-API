@@ -1,34 +1,34 @@
-import express from 'express'
+import express from 'express';
 import {
     createWorkspace,
     deleteWorkspace,
     getWorkspace,
     getWorkspaces,
     updateWorkspace,
-    assignUserIdToCard
-} from '../controllers/workspaceController.js'
+    assignUserIdToWorkspace
+} from '../controllers/workspaceController.js';
 
 // middleware
-import requireAuth from '../middleware/requireAuth.js'
-import isAdmin from '../middleware/isAdmin.js'
-import validateWorkspaceTitle from '../middleware/validateWorkspaceTitle.js'
+import requireAuth from '../middleware/requireAuth.js';
+import isAdmin from '../middleware/isAdmin.js';
+import validateWorkspaceTitle from '../middleware/validateWorkspaceTitle.js';
 
 
-const router = express.Router()
+const router = express.Router();
 
-router.use(requireAuth)
+router.use(requireAuth);
 
-router.post('/', isAdmin, validateWorkspaceTitle, createWorkspace)
+router.post('/', isAdmin, validateWorkspaceTitle, createWorkspace);
 
-router.get('/', getWorkspaces)
+router.get('/', getWorkspaces);
 
-router.get('/:title', isAdmin, getWorkspace)
+router.get('/:title', isAdmin, getWorkspace);
 
-router.delete('/:id', isAdmin, deleteWorkspace)
+router.delete('/:id', isAdmin, deleteWorkspace);
 
-router.patch('/', isAdmin, validateWorkspaceTitle, updateWorkspace)
+router.patch('/', isAdmin, validateWorkspaceTitle, updateWorkspace);
 
-router.patch('/assign-user', isAdmin, assignUserIdToCard)
+router.patch('/assign-user', isAdmin, assignUserIdToWorkspace);
 
 
-export default router
+export default router;

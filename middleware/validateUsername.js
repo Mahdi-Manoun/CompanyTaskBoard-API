@@ -1,19 +1,17 @@
-import User from "../models/userModel.js"
+import User from '../models/userModel.js';
 
-
+// Middleware to check if the username is valid or not
 const validateUsername = async (req, res, next) => {
-    const { username } = req.body
+    const { username } = req.body;
 
-    // check if username is provided
-    if (!username || username.trim() === '') return res.status(400).json({ error: 'Username is required' })
+    if (!username || username.trim() === '') return res.status(400).json({ error: 'Username is required' });
 
-    // check if username exists in db
-    const exists = await User.findOne({ username })
+    const exists = await User.findOne({ username });
 
-    if (exists) return res.status(409).json({ error: 'Username already exists. Please choose a different one.' })
+    if (exists) return res.status(409).json({ error: 'Username already exists. Please choose a different one.' });
 
-    next()
+    next();
 }
 
 
-export default validateUsername
+export default validateUsername;

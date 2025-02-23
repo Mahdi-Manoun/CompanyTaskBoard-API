@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 
 // create a board schema
@@ -20,10 +20,10 @@ const boardSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Card'
     }]
-}, { timestamps: true })
+}, { timestamps: true });
 
 
 // create a workspace model for schema
-const Board = new mongoose.model('Board', boardSchema)
+const Board = new mongoose.model('Board', boardSchema);
 
-export default Board
+export default Board;

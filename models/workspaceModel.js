@@ -1,13 +1,11 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 
 // create a workspace schema
 const workspaceSchema = new mongoose.Schema({
     title: {
         type: String,
-        required: true,
-        // unique: true,
-        // default: 'TaskBoard Workspace'
+        required: true
     },
     boards: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -17,10 +15,10 @@ const workspaceSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
-}, { timestamps: true })
+}, { timestamps: true });
 
 
 // create a workspace model for schema
-const Workspace = new mongoose.model('Workspace', workspaceSchema)
+const Workspace = new mongoose.model('Workspace', workspaceSchema);
 
-export default Workspace
+export default Workspace;

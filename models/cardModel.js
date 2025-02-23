@@ -1,6 +1,7 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 
+// create a card schema
 const cardSchema = new mongoose.Schema({
     title: {
         type: String
@@ -19,10 +20,11 @@ const cardSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     }
-}, { timestamps: true })
+}, { timestamps: true });
 
 
-const Card = new mongoose.model('Card', cardSchema)
+// create a card model for schema
+const Card = new mongoose.model('Card', cardSchema);
 
 
-export default Card
+export default Card;

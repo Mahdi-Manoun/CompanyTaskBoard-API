@@ -1,10 +1,11 @@
-import mongoose from 'mongoose'
-import Card from '../models/cardModel.js'
-import Board from '../models/boardModel.js'
-import Workspace from '../models/workspaceModel.js'
-import User from '../models/userModel.js'
+import mongoose from 'mongoose';
+import Card from '../models/cardModel.js';
+import Board from '../models/boardModel.js';
+import Workspace from '../models/workspaceModel.js';
+import User from '../models/userModel.js';
 
 
+// create a new card
 const createCard = async (req, res) => {
     const { title, description, board_id } = req.body;
 
@@ -34,36 +35,34 @@ const createCard = async (req, res) => {
             return res.status(404).json({ error: 'Board not found.' });
         }
 
-        const user = await User.findOne({ boards: board_id }).select('_id')
-
-        console.log(user)
+        const user = await User.findOne({ boards: board_id }).select('_id');
 
         const card = await Card.create({ title, description, board: board_id, user_id: user._id });
 
-        board.cards.push(card)
+        board.cards.push(card);
 
-        await board.save()
+        await board.save();
 
         return res.status(201).json(card);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        return res.status(400).json({ error: error.message });
     }
 };
 
 
 
-
+// get all cards
 const getCards = async (req, res) => {
-    const user_id = req.user._id
+    const user_id = req.user._id;
 
     try {
-        const workspaces = await Workspace.find({ user_id }).select('_id')
+        const workspaces = await Workspace.find({ user_id }).select('_id');
 
-        const workspaceIds = workspaces.map(workspace => workspace._id)
+        const workspaceIds = workspaces.map(workspace => workspace._id);
 
-        const boards = await Board.find({ workspace: { $in: workspaceIds } })
+        const boards = await Board.find({ workspace: { $in: workspaceIds } });
 
-        const boardIds = boards.map(board => board._id)
+        const boardIds = boards.map(board => board._id);
 
         const cards = await Card.find({ board: { $in: boardIds } })
             .select('title description')
@@ -74,46 +73,37 @@ const getCards = async (req, res) => {
                     path: 'workspace',
                     select: 'name'
                 }
-            })
+            });
 
 
-        return res.status(200).json(cards)
+        return res.status(200).json(cards);
     } catch (error) {
-        res.status(400).json({ error: error.message })
+        return res.status(400).json({ error: error.message });
     }
 }
 
 
-
+// delete a card
 const deleteCard = async (req, res) => {
     try {
         const { _id } = req.params;
 
-        console.log(_id)
-
-        // Check if the card ID is valid
         if (!mongoose.Types.ObjectId.isValid(_id)) {
             return res.status(400).json({ error: 'Invalid card ID' });
         }
 
-        // Find the card using the ID
         const card = await Card.findById(_id);
-
-
-        // Check if the card exists
         if (!card) {
             return res.status(404).json({ error: 'Card not found.' });
         }
 
-        const boardId = card.board; // Get the board ID from the card
+        const boardId = card.board;
 
-        // Delete the card
         await Card.findByIdAndDelete(_id);
 
-        // Remove the card ID from the cards array in the Board
+        // remove card reference from the board
         await Board.findByIdAndUpdate(boardId, { $pull: { cards: _id } });
 
-        // Send a success response with the card title
         return res.status(200).json({ message: `"${card.title}" deleted successfully` });
     } catch (error) {
         return res.status(500).json({ error: 'Server Error' });
@@ -121,40 +111,33 @@ const deleteCard = async (req, res) => {
 }
 
 
-
-
+// update a card's title and description
 const updateCard = async (req, res) => {
-    const { card_id } = req.params;
+    const { _id } = req.params;
     const { newTitle, newDescription } = req.body;
 
-    // Check if the card ID is valid
-    if (!mongoose.Types.ObjectId.isValid(card_id)) {
+    if (!mongoose.Types.ObjectId.isValid(_id)) {
         return res.status(400).json({ error: 'Invalid card ID' });
     }
 
     try {
-        // Find the card by its ID
-        const card = await Card.findOne({ _id: card_id });
+        const card = await Card.findOne({ _id });
 
-        // Return a 404 response if the card doesn't exist
         if (!card) return res.status(404).json({ error: 'Card not found.' });
 
 
 
-        // Update the card's title and description if exists
-        card.title = newTitle.trim() === '' ? card.title : newTitle.trim()
-        card.description = newDescription ? newDescription.trim() : card.description
+        // update only if new values are provided
+        card.title = newTitle.trim() === '' ? card.title : newTitle.trim();
+        card.description = newDescription ? newDescription.trim() : card.description;
 
-        await card.save(); // Save the updated card
+        await card.save();
 
-        // Return a success message
-        res.status(200).json({ message: `Card updated successfully: "${card.title}" - "${card.description}"` });
+        return res.status(200).json({ message: `Card updated successfully: "${card.title}" - "${card.description}"` });
     } catch (error) {
-        // Return a server error
         return res.status(500).json({ error: error.message });
     }
 }
-
 
 
 export {
